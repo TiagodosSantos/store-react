@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+![Store React Image](https://github.com/TiagodosSantos/store-react/blob/master/screenshot.jpg)
+
 ## Available Scripts
 
 In the project directory, you can run:
