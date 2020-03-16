@@ -48,7 +48,7 @@ class Customer extends Component{
 
       const parts = data.birthDate.split("-")
 
-      const autor = {
+      const customer = {
         name: data.name, 
         birthDate: parts[2]+"-"+parts[1]+"-"+parts[0],
         gender: data.gender,
@@ -56,7 +56,7 @@ class Customer extends Component{
         mobileNumber: data.mobileNumber,
       }
       
-      ApiService.SaveCustomer(JSON.stringify(autor))
+      ApiService.SaveCustomer(JSON.stringify(customer))
         .then(res => {
             PopUp.showMessage("success", "Cliente adicionado com sucesso!");
             this.listAllCustomers();

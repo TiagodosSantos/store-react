@@ -3,7 +3,7 @@ const urlBase = 'http://localhost:8080/store/';
 const ApiService = {
 
     ListAllCustomers: () =>{
-        return fetch(`${urlBase}customer`, {
+        return fetch(`${urlBase}customers`, {
             headers: {'content-type': 'application/json'}
         })
         .then(res => ApiService.CheckErrors(res))
@@ -11,7 +11,7 @@ const ApiService = {
     },
 
     RemoveCustomer: id => {
-        const path = `customer/${id}`;
+        const path = `customers/${id}`;
 
         return fetch(`${urlBase}${path}`, {
             method: 'DELETE',
@@ -20,7 +20,7 @@ const ApiService = {
     },
 
     SaveCustomer: customer => {
-        const param = 'customer';
+        const param = 'customers';
 
         return fetch(`${urlBase}${param}`, {
             method: 'POST',
