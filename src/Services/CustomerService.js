@@ -1,36 +1,34 @@
-const urlBase = 'http://localhost:8080/store/';
+const urlBase = 'http://localhost:8080/store/customers';
 
-const ApiService = {
+const CustomerService = {
 
     ListAllCustomers: () =>{
-        return fetch(`${urlBase}customers`, {
+        return fetch(`${urlBase}`, {
             headers: {'content-type': 'application/json'}
         })
-        .then(res => ApiService.CheckErrors(res))
+        .then(res => CustomerService.HandleError(res))
         .then(res =>  res.json());
     },
 
     RemoveCustomer: id => {
-        const path = `customers/${id}`;
 
-        return fetch(`${urlBase}${path}`, {
+        return fetch(`${urlBase}/${id}`, {
             method: 'DELETE',
             headers: {'content-type': 'application/json'},
         });
     },
 
     SaveCustomer: customer => {
-        const param = 'customers';
 
-        return fetch(`${urlBase}${param}`, {
+        return fetch(`${urlBase}`, {
             method: 'POST',
             headers: {'content-type': 'application/json'},
             body : customer
         })
-        .then(res => ApiService.CheckErrors(res))
+        .then(res => CustomerService.HandleError(res))
     },
 
-    CheckErrors: res=>{
+    HandleError: res=>{
         
         if(!res.ok)
             throw Error(res.responseText);
@@ -41,4 +39,4 @@ const ApiService = {
 
 }
 
-export default ApiService;
+export default CustomerService;

@@ -7,7 +7,8 @@ const Header = () => {
         <div className="nav-wrapper teal lighten-2">
           <LinkWrapper to="/" className="brand-logo" activeStyle={{}}>Smartest IT Solutions ME</LinkWrapper >
             <ul className="right">
-                <li><LinkWrapper to="/">Customers</LinkWrapper></li>
+                <li><LinkWrapper to="/">Clientes</LinkWrapper></li>
+                <li><LinkWrapper to="/invoices">Faturas</LinkWrapper></li>
             </ul>
         </div>
       </nav>

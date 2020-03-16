@@ -4,9 +4,10 @@ import './Customer.css';
 
 import Header from '../../Components/Header/Header';
 import Table from '../../Components/Table/Table';
-import Form from '../../Components/Form/Form';
+import Form from '../../Components/Form/CustomerForm';
 import PopUp from '../../Utils/PopUp';
-import ApiService from '../../Utils/ApiService';
+import DateUtils from '../../Utils/DateUtils';
+import CustomerService from '../../Services/CustomerService';
 
 class Customer extends Component{
 
@@ -23,7 +24,7 @@ class Customer extends Component{
   }
 
   listAllCustomers = () => {
-    ApiService.ListAllCustomers()
+    CustomerService.ListAllCustomers()
       .then(res => {
         this.setState({customers: res})
       })
@@ -35,7 +36,7 @@ class Customer extends Component{
 
     console.log("Remove "+ id);
 
-      ApiService.RemoveCustomer(id)
+      CustomerService.RemoveCustomer(id)
         .then(res => {
             PopUp.showMessage("success", "CLiente removido com sucesso!");
             this.listAllCustomers();
@@ -46,17 +47,15 @@ class Customer extends Component{
 
   saveCustomer = data => {
 
-      const parts = data.birthDate.split("-")
-
       const customer = {
         name: data.name, 
-        birthDate: parts[2]+"-"+parts[1]+"-"+parts[0],
+        birthDate: DateUtils.convertStringToDate(data.birthDate),
         gender: data.gender,
         telephoneNumber: data.telephoneNumber,
         mobileNumber: data.mobileNumber,
       }
       
-      ApiService.SaveCustomer(JSON.stringify(customer))
+      CustomerService.SaveCustomer(JSON.stringify(customer))
         .then(res => {
             PopUp.showMessage("success", "Cliente adicionado com sucesso!");
             this.listAllCustomers();
@@ -79,7 +78,6 @@ class Customer extends Component{
       {title: "Celular", data: 'mobileNumber'},
     ];
 
-    console.log(fields);
 
     return (
       <Fragment>
