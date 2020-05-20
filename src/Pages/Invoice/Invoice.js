@@ -8,6 +8,8 @@ import Form from '../../Components/Form/InvoiceForm';
 import PopUp from '../../Utils/PopUp';
 import DateUtils from '../../Utils/DateUtils';
 import InvoiceService from '../../Services/InvoiceService';
+import CustomerService from '../../Services/CustomerService';
+import { withRouter } from 'react-router-dom';
 
 class Invoice extends Component{
 
@@ -16,17 +18,28 @@ class Invoice extends Component{
 
     this.state = {
       invoices:  [],
+      customers: [],
     };
   }
 
   async componentDidMount(){
+    this.listAllCustomers();
     this.listAllInvoices();
+    
   }
 
   listAllInvoices = () => {
     InvoiceService.ListAllInvoices()
       .then(res => {
         this.setState({invoices: res})
+      })
+      .catch(erro => PopUp.showMessage("error", "Falha na comunicacao com a Store API"));
+  }
+
+  listAllCustomers = () => {
+    CustomerService.ListAllCustomers()
+      .then(res => {
+        this.setState({customers: res})
       })
       .catch(erro => PopUp.showMessage("error", "Falha na comunicacao com a Store API"));
   }
@@ -38,10 +51,20 @@ class Invoice extends Component{
 
       InvoiceService.RemoveInvoice(id)
         .then(res => {
-            PopUp.showMessage("success", "Fatura removida com sucesso!");
+            PopUp.showMessage("success", "Fatura removida com sucesso! ");
             this.listAllInvoices();
         })
-        .catch(erro => PopUp.showMessage("error", "Falha na comunicação com a Store API"));
+        .catch(erro => {
+          if(erro.message === "403"){
+            PopUp.showMessage("error", "Você precisa estar logado para remover esta fatura");
+            this.props.history.push({
+              pathname: '/login',
+              search: '?redirect=invoices',
+            });
+          }else{
+            PopUp.showMessage("error", "Falha na comunicação com a Store API");
+          }
+        });
       
   }
 
@@ -50,7 +73,7 @@ class Invoice extends Component{
       const invoice = {
         competencyDate: DateUtils.convertStringToDate(data.competencyDate), 
         //customerId: data.customerId,
-        customerId: 1,
+        customerId: data.customerId,
         dueDate: DateUtils.convertStringToDate(data.dueDate),
         payDate: DateUtils.convertStringToDate(data.payDate),
       }
@@ -63,8 +86,15 @@ class Invoice extends Component{
             this.listAllInvoices();
       })
       .catch(erro => {
-        console.log(erro);
-        PopUp.showMessage("error", "Falha na comunicação com a API")
+        if(erro.message === "403"){
+          PopUp.showMessage("error", "Você precisa estar logado para adicionar uma fatura");
+          this.props.history.push({
+            pathname: '/login',
+            search: '?redirect=invoices',
+          });
+        }else{
+          PopUp.showMessage("error", "Falha na comunicação com a Store API");
+        }
       });
          
   }
@@ -84,7 +114,7 @@ class Invoice extends Component{
         <Header />
         <div className="container center mb-10">
           <h3>Faturas</h3>
-          {<Form saveInvoice = {this.saveInvoice}/>}
+          <Form saveInvoice = {this.saveInvoice} customers = {this.state.customers}/>
           <Table data= {this.state.invoices} removeData = {this.removeInvoice} fields={fields}/>
         </div>
       </Fragment>
@@ -92,4 +122,4 @@ class Invoice extends Component{
   }
 }
 
-export default Invoice;
+export default withRouter(Invoice);

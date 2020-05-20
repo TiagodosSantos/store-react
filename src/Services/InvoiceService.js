@@ -14,15 +14,21 @@ const InvoiceService = {
 
         return fetch(`${urlBase}/${id}`, {
             method: 'DELETE',
-            headers: {'content-type': 'application/json'},
-        });
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': localStorage.getItem('auth-token'),
+            },
+        }).then(res => InvoiceService.HandleError(res));
     },
 
     SaveInvoice: invoice => {
 
         return fetch(`${urlBase}`, {
             method: 'POST',
-            headers: {'content-type': 'application/json'},
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': localStorage.getItem('auth-token'),
+            },
             body : invoice
         })
         .then(res => InvoiceService.HandleError(res))
@@ -32,9 +38,9 @@ const InvoiceService = {
         
         console.log(res);
         if(!res.ok)
-            throw Error(res.responseText);
+            throw Error(res.status !== 403 ? res.responseText : res.status);
 
-      console.log(res.json);
+      //console.log(res.json);
       return res;      
     }
 

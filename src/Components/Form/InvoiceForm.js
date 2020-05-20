@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+
+import {
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+  Button,
+} from "@material-ui/core";
 
 import FormValidator from '../../Utils/FormValidator';
 import Toast from '../Toast/Toast';
@@ -37,6 +44,7 @@ class Form extends Component {
       competencyDate: "",
       dueDate: "",
       payDate: "",
+      customerId: '',
       validation: this.validator.valid(),
       message: {
         open: false,
@@ -90,7 +98,7 @@ class Form extends Component {
 
 
   render() {
-    const {competencyDate, dueDate, payDate} = this.state;
+    const {competencyDate, dueDate, payDate, customerId} = this.state;
 
     return (
       <>
@@ -103,19 +111,32 @@ class Form extends Component {
         </Toast>
 
         <form>
-          <Grid container spacing={1} alignItems="center">   
+          <Grid container spacing={1} alignItems="center">  
 
-              <Grid item xs={4}>
+            <Grid item xs={3}>
+              <FormControl required>
+                <InputLabel id="customer-label">Selecione o cliente</InputLabel>
+                  <Select id="customerId" labelId="customer-label" name="customerId" value={customerId} onChange={this.setInput} >
+                    { this.props.customers.map((customer) => (
+                        <MenuItem key={customer.id} value={customer.id}>
+                          {customer.name}
+                        </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid> 
+
+              <Grid item xs={3}>
                 <TextField id="competencyDate" type="date" format={'DD/MM/YYYY'} name="competencyDate" label="Data de competência" variant="outlined"
                     value={competencyDate} onChange={this.setInput} InputLabelProps={{ shrink: true,}}/>
               </Grid>
 
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField id="dueDate" type="date" format={'DD/MM/YYYY'} name="dueDate" label="Data de vencimento" variant="outlined"
                     value={dueDate} onChange={this.setInput} InputLabelProps={{ shrink: true,}}/>
               </Grid>
 
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField id="payDate" type="date" format={'DD/MM/YYYY'} name="payDate" label="Data de pagamento" variant="outlined"
                     value={payDate} onChange={this.setInput} InputLabelProps={{ shrink: true,}}/>
               </Grid>

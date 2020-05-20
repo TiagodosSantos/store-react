@@ -12,26 +12,33 @@ const CustomerService = {
 
     RemoveCustomer: id => {
 
+        console.log("Aqui  "+ localStorage.getItem('auth-token'));
         return fetch(`${urlBase}/${id}`, {
             method: 'DELETE',
-            headers: {'content-type': 'application/json'},
-        });
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': localStorage.getItem('auth-token'),
+            },
+        }).then(res => CustomerService.HandleError(res));
     },
 
     SaveCustomer: customer => {
 
         return fetch(`${urlBase}`, {
             method: 'POST',
-            headers: {'content-type': 'application/json'},
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': localStorage.getItem('auth-token'),
+            },
             body : customer
         })
-        .then(res => CustomerService.HandleError(res))
+        .then(res => CustomerService.HandleError(res));
     },
 
     HandleError: res=>{
         
         if(!res.ok)
-            throw Error(res.responseText);
+            throw Error(res.status !== 403 ? res.responseText : res.status);
 
       console.log(res.json);
       return res;      

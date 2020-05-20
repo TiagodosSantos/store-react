@@ -50,8 +50,8 @@ const CustomizedTable = (props) => {
         <TableBody>
           { data.map((data) => (
                 <TableRow key={data.id}>
-                  {fields.map(field => (
-                      <TableCell>{data[field.data]}</TableCell>
+                  {fields.map((field,index) => (
+                      <TableCell key={index}>{data[field.data]}</TableCell>
                     ))}
                   <DeleteCell id={data.id} removeData={removeData}/>
                 </TableRow>

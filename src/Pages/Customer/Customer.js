@@ -41,7 +41,17 @@ class Customer extends Component{
             PopUp.showMessage("success", "CLiente removido com sucesso!");
             this.listAllCustomers();
         })
-        .catch(erro => PopUp.showMessage("error", "Falha na comunicação com a Store API"));
+        .catch(erro => {
+          if(erro.message === "403"){
+            PopUp.showMessage("error", "Você precisa estar logado para remover este cliente");
+            this.props.history.push({
+              pathname: '/login',
+              //search: '?redirect=customers',
+            });
+          }else{
+            PopUp.showMessage("error", "Falha na comunicação com a Store API");
+          }
+        });
       
   }
 
@@ -61,8 +71,15 @@ class Customer extends Component{
             this.listAllCustomers();
       })
       .catch(erro => {
-        console.log(erro);
-        PopUp.showMessage("error", "Falha na comunicação com a API")
+        if(erro.message === "403"){
+          PopUp.showMessage("error", "Você precisa estar logado para adicionar um cliente");
+          this.props.history.push({
+            pathname: '/login',
+            //search: '?redirect=customers',
+          });
+        }else{
+          PopUp.showMessage("error", "Falha na comunicação com a Store API");
+        }
       });
          
   }
